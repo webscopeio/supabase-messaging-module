@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 
 import { createClient } from "@/modules/utils/client"
+import { Profile } from "@/modules/user/profile"
 
 import { Room } from ".."
 
@@ -25,10 +26,19 @@ type InviteToRoom = ({
   userIds: Array<string>
 }) => void
 
+type GetRoomParticipants = ({ roomId }: { roomId: number }) => Promise<
+  | {
+      id: number
+      username: string
+    }[]
+  | null
+>
+
 type UseRoomsReturnType = {
   rooms: Room[]
   createRoom: CreateRoom
   inviteToRoom: InviteToRoom
+  getRoomParticipants: GetRoomParticipants
 }
 
 const client = createClient()
@@ -113,9 +123,30 @@ export const useRooms = ({
     )
   }, [])
 
+  const getRoomParticipants = useCallback<GetRoomParticipants>(
+    async ({ roomId }) => {
+      const participants = await client
+        .from("room_participants")
+        .select(
+          `
+          id,
+          profiles ( username )
+        `
+        )
+        .eq("room_id", roomId)
+
+      return participants.data?.map((data) => ({
+        id: data.id,
+        username: data.profiles.at(0)?.username ?? "",
+      }))
+    },
+    []
+  )
+
   return {
     rooms,
     createRoom,
     inviteToRoom,
+    getRoomParticipants,
   }
 }

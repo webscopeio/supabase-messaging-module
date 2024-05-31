@@ -5,7 +5,7 @@ import { redirect as _redirect, type RedirectType } from "next/navigation"
 import { Database } from "@/modules/types"
 import { createClient } from "@/modules/utils/server"
 
-type Profile = Database["public"]["Tables"]["profiles"]["Row"]
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"]
 
 type ServerError = {
   error: { message: string }
