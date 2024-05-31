@@ -7,8 +7,7 @@ export default async function Page() {
     <div>
       <h1 className="mb-4 text-4xl">Messages</h1>
       <ul>
-        {rooms.map(({ id, name }) => (
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        {rooms.map(({ id, name }: { id: number; name: string }) => (
           <li key={id}>{name}</li>
         ))}
       </ul>
