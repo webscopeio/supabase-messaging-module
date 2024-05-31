@@ -25,7 +25,7 @@ export function SidePanel({
         <Separator className="my-4" />
         <div className="mb-4 flex items-center justify-between">
           <h2 className="leading-none">Rooms</h2>
-          <CreateRoomSheet />
+          <CreateRoomSheet users={users} />
         </div>
         <RoomsList
           rooms={rooms}

@@ -1,7 +1,8 @@
 "use client"
 
-import React from "react"
-import { Check, ChevronsUpDown, CirclePlus } from "lucide-react"
+import * as React from "react"
+import { useState } from "react"
+import { Check, ChevronsUpDown, CirclePlus, X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -30,11 +31,19 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-const frameworks = [{ value: "react", label: "React" }]
+import { User } from "@/modules/messaging"
 
-export default function CreateRoomSheet() {
+export default function CreateRoomSheet({ users }: { users: User[] }) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
+
+  const usersToAdd = users.filter((user) => {
+    return (
+      selectedUsers.find((selectedUser) => selectedUser.id === user.id) ===
+      undefined
+    )
+  })
 
   return (
     <Sheet>
@@ -57,7 +66,7 @@ export default function CreateRoomSheet() {
           </div>
           <div className="grid grid-cols-6 items-center gap-4">
             <Label htmlFor="username" className="col-span-2 text-right">
-              Username
+              Users
             </Label>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
@@ -65,38 +74,41 @@ export default function CreateRoomSheet() {
                   variant="outline"
                   role="combobox"
                   aria-expanded={open}
-                  className="w-[200px] justify-between"
+                  className="col-span-4 justify-between"
+                  disabled={usersToAdd.length === 0}
                 >
                   {value
-                    ? frameworks.find((framework) => framework.value === value)
-                        ?.label
-                    : "Select framework..."}
+                    ? users.find((user) => user.id === value)?.email
+                    : usersToAdd.length === 0
+                      ? "All users selected"
+                      : "Add users..."}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
+              <PopoverContent className="w-max p-0">
                 <Command>
-                  <CommandInput placeholder="Search framework..." />
-                  <CommandEmpty>No framework found.</CommandEmpty>
+                  <CommandInput placeholder="Add users..." />
+                  <CommandEmpty>No user found.</CommandEmpty>
                   <CommandGroup>
-                    {frameworks.map((framework) => (
+                    {usersToAdd.map((user) => (
                       <CommandItem
-                        key={framework.value}
-                        value={framework.value}
+                        key={user.id}
+                        value={user.email}
                         onSelect={(currentValue) => {
-                          setValue(currentValue === value ? "" : currentValue)
+                          setSelectedUsers((prev) => [
+                            ...prev,
+                            users.find((user) => user.email === currentValue)!,
+                          ])
                           setOpen(false)
                         }}
                       >
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            value === framework.value
-                              ? "opacity-100"
-                              : "opacity-0"
+                            value === user.id ? "opacity-100" : "opacity-0"
                           )}
                         />
-                        {framework.label}
+                        {user.email}
                       </CommandItem>
                     ))}
                   </CommandGroup>
@@ -104,6 +116,16 @@ export default function CreateRoomSheet() {
               </PopoverContent>
             </Popover>
           </div>
+          <ul className="grid-cols-6 p-2 pl-28">
+            {selectedUsers.map(({ id, email }) => (
+              <li key={id} className="flex items-center justify-between px-2">
+                {email}
+                <button>
+                  <X />
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
         <SheetFooter>
           <SheetClose asChild>
