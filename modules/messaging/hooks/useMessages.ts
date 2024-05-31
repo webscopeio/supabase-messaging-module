@@ -1,18 +1,22 @@
-import { useEffect, useState } from "react"
+"use client"
+
+import { useCallback, useEffect, useState } from "react"
 
 import { createClient } from "@/modules/utils/client"
 import { Message } from "@/modules/messaging"
 
+const client = createClient()
+
 export const useMessages = ({
+  roomId,
   messages: messagesInitial,
 }: {
+  roomId: number
   messages: Message[]
 }) => {
   const [messages, setMessages] = useState(messagesInitial)
 
   useEffect(() => {
-    const client = createClient()
-
     const changes = client
       .channel("schema-db-changes")
       .on<Message>(
@@ -21,6 +25,7 @@ export const useMessages = ({
           event: "*",
           schema: "public",
           table: "messages",
+          filter: `room_id=eq.${roomId}`,
         },
         (payload) => {
           if (payload.eventType === "INSERT") {
@@ -51,7 +56,26 @@ export const useMessages = ({
     return () => void changes.unsubscribe()
   }, [messages, setMessages])
 
+  const fetchMore = useCallback(
+    (limit: number = 10) => {
+      client
+        .from("messages")
+        .select()
+        .eq("room_id", roomId)
+        .lt("created_at", [messages[0].created_at])
+        .order("created_at", { ascending: false })
+        .limit(limit)
+        .then(({ data: messagesOlder }) => {
+          console.log(messagesOlder)
+
+          setMessages((messages) => [...messagesOlder, ...messages])
+        })
+    },
+    [messages, setMessages, roomId]
+  )
+
   return {
     messages,
+    fetchMore,
   }
 }

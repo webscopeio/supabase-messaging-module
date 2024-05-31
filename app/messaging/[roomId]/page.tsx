@@ -10,7 +10,7 @@ export default async function Page({ params }: { params: { roomId: string } }) {
     <div>
       <h1>Room ID: {params.roomId}</h1>
 
-      <MessagesList messages={messages} />
+      <MessagesList roomId={roomId} messages={messages} />
     </div>
   )
 }
