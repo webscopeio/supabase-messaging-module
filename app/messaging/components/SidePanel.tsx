@@ -2,6 +2,7 @@ import React from "react"
 import Link from "next/link"
 
 import { Separator } from "@/components/ui/separator"
+import CreateRoomSheet from "@/app/messaging/components/CreateRoomSheet"
 import { RoomsList } from "@/app/messaging/components/RoomsList"
 
 import { Room, User } from "@/modules/messaging"
@@ -22,7 +23,10 @@ export function SidePanel({
           <h1 className="py-2 font-extrabold">Webscope.io messaging</h1>
         </Link>
         <Separator className="my-4" />
-        <h2 className="mb-4">Rooms</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="leading-none">Rooms</h2>
+          <CreateRoomSheet />
+        </div>
         <RoomsList
           rooms={rooms}
           activeRoomId={activeRoomId ? parseInt(activeRoomId) : undefined}
