@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Bookmark, PanelLeft } from "lucide-react"
+import { Bookmark, MessagesSquare, PanelLeft } from "lucide-react"
 
 import {
   Breadcrumb,
@@ -63,6 +63,7 @@ export const ApplicationLayout: React.FC<
             <SupabaseModulesIcon />
             <span className="sr-only">Supabase Modules</span>
           </Link>
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
@@ -74,6 +75,19 @@ export const ApplicationLayout: React.FC<
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">Bookmarks</TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link
+                href="/messaging"
+                className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
+              >
+                <MessagesSquare className="size-5" />
+                <span className="sr-only">Messaging</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">Messaging</TooltipContent>
           </Tooltip>
         </nav>
       </aside>
