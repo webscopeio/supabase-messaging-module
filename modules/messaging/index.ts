@@ -29,6 +29,15 @@ export async function getRooms(): Promise<Room[]> {
   return data
 }
 
+export async function getAllUsers() {
+  const supabase = createClient()
+  const { data, error } = await supabase.from("profiles").select("*")
+
+  if (error) throw new Error(error.message)
+
+  return data
+}
+
 export async function getMessages({
   roomId,
 }: {
