@@ -3,6 +3,7 @@ import { createClient } from "@/modules/utils/server"
 
 export type Room = Database["public"]["Tables"]["rooms"]["Row"]
 export type Message = Database["public"]["Tables"]["messages"]["Row"]
+export type User = Database["public"]["Tables"]["profiles"]["Row"]
 
 export async function getRooms(): Promise<Room[]> {
   const supabase = createClient()

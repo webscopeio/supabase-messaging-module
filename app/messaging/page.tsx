@@ -1,20 +1,17 @@
+import AppLayout from "@/app/messaging/components/AppLayout"
+import { SidePanel } from "@/app/messaging/components/SidePanel"
+
 import { getAllUsers, getRooms } from "@/modules/messaging"
 
-import { RoomsList } from "./components/RoomsList"
-
 export default async function Page() {
-  const rooms = await getRooms()
   const users = await getAllUsers()
+  const rooms = await getRooms()
+
+  const sidePanel = <SidePanel rooms={rooms} users={users} />
 
   return (
-    <>
-      <RoomsList rooms={rooms} />
-      <ul className="mt-8">
-        <li>Users</li>
-        {users.map(({ id, username }) => (
-          <li key={id}>{username}</li>
-        ))}
-      </ul>
-    </>
+    <AppLayout sidePanel={sidePanel}>
+      <h1 className="py-16 text-center text-3xl">Welcome</h1>
+    </AppLayout>
   )
 }
