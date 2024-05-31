@@ -25,18 +25,35 @@ export const useRooms = ({
       .on<Room>(
         "postgres_changes",
         {
-          event: "INSERT", // Listen only to INSERTs
+          event: "*",
           schema: "public",
           table: "rooms",
         },
         (payload) => {
-          const room: Room = payload.new
-          setRooms((rooms) => [...rooms, room])
+          if (payload.eventType === "INSERT") {
+            setRooms((rooms) => [...rooms, payload.new])
+          }
+
+          if (payload.eventType === "DELETE") {
+            setRooms((rooms) => rooms.filter(({ id }) => id !== payload.old.id))
+          }
+
+          if (payload.eventType === "UPDATE") {
+            setRooms((rooms) =>
+              rooms.map((room) => {
+                if (room.id === payload.new.id) {
+                  return payload.new
+                }
+
+                return room
+              })
+            )
+          }
         }
       )
       .subscribe()
 
-    return () => changes.unsubscribe()
+    return () => void changes.unsubscribe()
   }, [rooms, setRooms])
 
   return {
