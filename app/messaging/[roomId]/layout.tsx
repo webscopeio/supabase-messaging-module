@@ -1,11 +1,9 @@
 import React from "react"
 
-import { getAllUsers, getRooms } from "@/modules/messaging"
-
-import "next/navigation"
-
 import AppLayout from "@/app/messaging/components/AppLayout"
 import { SidePanel } from "@/app/messaging/components/SidePanel"
+
+import { getAllUsers, getRooms } from "@/modules/messaging"
 
 export default async function Layout({
   children,

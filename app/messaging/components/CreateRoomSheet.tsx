@@ -31,12 +31,20 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-import { User } from "@/modules/messaging"
+import { Room, User } from "@/modules/messaging"
+import { useRooms } from "@/modules/messaging/hooks/useRooms"
 
-export default function CreateRoomSheet({ users }: { users: User[] }) {
+export default function CreateRoomSheet({
+  users,
+  rooms,
+}: {
+  users: User[]
+  rooms: Room[]
+}) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
   const [selectedUsers, setSelectedUsers] = useState<User[]>([])
+  const [roomName, setRoomName] = useState("")
 
   const usersToAdd = users.filter((user) => {
     return (
@@ -45,8 +53,17 @@ export default function CreateRoomSheet({ users }: { users: User[] }) {
     )
   })
 
+  const { createRoom } = useRooms({ rooms })
+
   return (
-    <Sheet>
+    <Sheet
+      onOpenChange={(open) => {
+        if (!open) {
+          setRoomName("")
+          setSelectedUsers([])
+        }
+      }}
+    >
       <SheetTrigger>
         <CirclePlus className="rounded" />
       </SheetTrigger>
@@ -62,7 +79,12 @@ export default function CreateRoomSheet({ users }: { users: User[] }) {
             <Label htmlFor="name" className="col-span-2 text-right">
               Room name
             </Label>
-            <Input id="name" value="" className="col-span-4" />
+            <Input
+              id="name"
+              value={roomName}
+              onChange={(event) => setRoomName(event.target.value)}
+              className="col-span-4"
+            />
           </div>
           <div className="grid grid-cols-6 items-center gap-4">
             <Label htmlFor="username" className="col-span-2 text-right">
@@ -120,7 +142,13 @@ export default function CreateRoomSheet({ users }: { users: User[] }) {
             {selectedUsers.map(({ id, email }) => (
               <li key={id} className="flex items-center justify-between px-2">
                 {email}
-                <button>
+                <button
+                  onClick={() => {
+                    setSelectedUsers((prev) =>
+                      prev.filter((user) => user.id !== id)
+                    )
+                  }}
+                >
                   <X />
                 </button>
               </li>
@@ -129,7 +157,18 @@ export default function CreateRoomSheet({ users }: { users: User[] }) {
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button type="submit">Create</Button>
+            <Button
+              type="submit"
+              onClick={() => {
+                createRoom({
+                  name: roomName,
+                  userIds: selectedUsers.map((user) => user.id),
+                })
+                setOpen(false)
+              }}
+            >
+              Create
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

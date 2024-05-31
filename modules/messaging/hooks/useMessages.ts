@@ -18,7 +18,7 @@ export const useMessages = ({
 
   useEffect(() => {
     const changes = client
-      .channel("schema-db-changes")
+      .channel("db-messages-changes")
       .on<Message>(
         "postgres_changes",
         {

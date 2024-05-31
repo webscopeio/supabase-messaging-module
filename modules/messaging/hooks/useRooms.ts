@@ -51,7 +51,7 @@ export const useRooms = ({
 
   useEffect(() => {
     const changes = client
-      .channel("schema-db-changes")
+      .channel("db-rooms-changes")
       .on<Room>(
         "postgres_changes",
         {
