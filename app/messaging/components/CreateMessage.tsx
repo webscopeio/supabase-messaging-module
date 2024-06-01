@@ -60,7 +60,7 @@ export function CreateMessage({
           rteRef.current.setMarkdown("")
         }}
       >
-        Send message <Send className="ml-2 mt-2 w-4" />
+        Send message <Send className="ml-2 w-4" />
       </Button>
     </>
   )
