@@ -10,9 +10,11 @@ const client = createClient()
 export const useMessages = ({
   roomId,
   messages: messagesInitial,
+  onMessageCreate,
 }: {
   roomId: number
   messages: Message[]
+  onMessageCreate?: (message: Message) => void
 }) => {
   const [messages, setMessages] = useState(messagesInitial)
 
@@ -31,6 +33,7 @@ export const useMessages = ({
         (payload) => {
           if (payload.eventType === "INSERT") {
             setMessages((messages) => [...messages, payload.new])
+            onMessageCreate?.(payload.new)
           }
 
           if (payload.eventType === "DELETE") {
