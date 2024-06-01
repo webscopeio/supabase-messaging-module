@@ -3,6 +3,7 @@
 import Markdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 
+import { Button } from "@/components/ui/button"
 import MessageAuthor from "@/app/messaging/components/MessageAuthor"
 
 import { Message } from "@/modules/messaging"
@@ -19,7 +20,11 @@ export const MessagesList: React.FC<{
 
   return (
     <div className="scroll max-h-[calc(100vh_-_24rem)] flex-grow overflow-y-scroll">
-      <button onClick={() => fetchMore(1)}>Fetch More</button>
+      <div className="text-center">
+        <Button variant="outline" onClick={() => fetchMore(1)}>
+          Fetch More...
+        </Button>
+      </div>
       <ul>
         {messages.map(
           ({

@@ -47,7 +47,7 @@ export async function getMessages({
     .select("*")
     .eq("room_id", roomId)
     .order("created_at", { ascending: false })
-    .limit(20)
+    .limit(10)
 
   if (error) throw new Error(error.message)
 
