@@ -56,6 +56,7 @@ export function CreateMessage({
         className="w-full"
         onClick={() => {
           if (!rteRef.current) return
+          console.log(rteRef.current.getMarkdown())
           createMessage(rteRef.current.getMarkdown())
           rteRef.current.setMarkdown("")
         }}

@@ -1,5 +1,8 @@
 "use client"
 
+import Markdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+
 import MessageAuthor from "@/app/messaging/components/MessageAuthor"
 
 import { Message } from "@/modules/messaging"
@@ -30,7 +33,9 @@ export const MessagesList: React.FC<{
           }) => (
             <div className="my-8" key={id}>
               <MessageAuthor user_id={user_id} />
-              <div className="ml-11">{content}</div>
+              <div className="prose ml-11">
+                <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
+              </div>
             </div>
           )
         )}
