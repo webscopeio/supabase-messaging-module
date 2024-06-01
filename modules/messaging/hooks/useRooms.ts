@@ -135,10 +135,12 @@ export const useRooms = ({
         )
         .eq("room_id", roomId)
 
-      return participants.data?.map((data) => ({
-        id: data.id,
-        username: data.profiles.at(0)?.username ?? "",
-      }))
+      return (
+        participants.data?.map((data) => ({
+          id: data.id,
+          username: data.profiles.at(0)?.username ?? "",
+        })) || null
+      )
     },
     []
   )

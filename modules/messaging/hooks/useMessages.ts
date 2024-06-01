@@ -72,7 +72,11 @@ export const useMessages = ({
         .then(({ data: messagesOlder }) => {
           console.log(messagesOlder)
 
-          setMessages((messages) => [...messagesOlder, ...messages])
+          if (messagesOlder) {
+            setMessages((messages) => [...messagesOlder, ...messages])
+          } else {
+            setMessages(messages)
+          }
         })
     },
     [messages, setMessages, roomId]

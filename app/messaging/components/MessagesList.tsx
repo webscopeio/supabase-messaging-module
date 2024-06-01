@@ -25,12 +25,6 @@ export const MessagesList: React.FC<{
 
   useEffect(() => {
     if (scrollRef.current) {
-      console.log(
-        "message created",
-        scrollRef.current.scrollTop,
-        scrollRef.current.scrollHeight
-      )
-
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight + 200
     }
   }, [messages.at(-1)?.id])
@@ -57,6 +51,7 @@ export const MessagesList: React.FC<{
             user_id: string
           }) => (
             <MessagePanel
+              key={id}
               newMessages={newMessages}
               id={id}
               user_id={user_id}

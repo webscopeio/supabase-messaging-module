@@ -1,12 +1,11 @@
 import { CreateMessage } from "@/app/messaging/components/CreateMessage"
 import { MessagesList } from "@/app/messaging/components/MessagesList"
 
-import { getMessages, getRoom, getRooms } from "@/modules/messaging"
+import { getMessages, getRoom } from "@/modules/messaging"
 
 export default async function Page({ params }: { params: { roomId: string } }) {
   const roomId = parseInt(params.roomId)
   const messages = await getMessages({ roomId })
-  console.log(messages)
 
   const room = await getRoom({ id: roomId })
   return (
