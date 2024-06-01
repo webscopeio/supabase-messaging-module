@@ -18,7 +18,7 @@ export const MessagesList: React.FC<{
   })
 
   return (
-    <div>
+    <div className="scroll max-h-[calc(100vh_-_24rem)] flex-grow overflow-y-scroll">
       <button onClick={() => fetchMore(1)}>Fetch More</button>
       <ul>
         {messages.map(
