@@ -40,11 +40,16 @@ export function CreateMessage({
   const handleKeyDown: KeyboardEventHandler = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault()
-      if (!rteRef.current) return
-      createMessage(rteRef.current.getMarkdown())
-      rteRef.current.setMarkdown("")
+      sendMessage()
     }
     // If Shift + Enter is pressed, let the default action proceed (e.g., new line)
+  }
+
+  const sendMessage = () => {
+    if (!rteRef.current) return
+    if (!rteRef.current.getMarkdown().trim()) return
+    createMessage(rteRef.current.getMarkdown())
+    rteRef.current.setMarkdown("")
   }
 
   return (
@@ -52,15 +57,7 @@ export function CreateMessage({
       <div className="min-h-40" onKeyDown={handleKeyDown}>
         <ForwardRefEditor markdown="" ref={rteRef} />
       </div>
-      <Button
-        className="w-full"
-        onClick={() => {
-          if (!rteRef.current) return
-          console.log(rteRef.current.getMarkdown())
-          createMessage(rteRef.current.getMarkdown())
-          rteRef.current.setMarkdown("")
-        }}
-      >
+      <Button className="w-full" onClick={sendMessage}>
         Send message <Send className="ml-2 w-4" />
       </Button>
     </>
