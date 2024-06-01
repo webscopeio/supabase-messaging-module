@@ -1,14 +1,13 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import Markdown from "react-markdown"
-import remarkGfm from "remark-gfm"
+import { useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import MessageAuthor from "@/app/messaging/components/MessageAuthor"
 
 import { Message } from "@/modules/messaging"
 import { useMessages } from "@/modules/messaging/hooks/useMessages"
+
+import MessagePanel from "./Message"
 
 export const MessagesList: React.FC<{
   roomId: number
@@ -18,8 +17,11 @@ export const MessagesList: React.FC<{
   const { messages, fetchMore } = useMessages({
     roomId,
     messages: messagesInitial,
-    onMessageCreate: (message) => {},
+    onMessageCreate: (message) => {
+      setNewMessages((newMessages) => [...newMessages, message.id])
+    },
   })
+  const [newMessages, setNewMessages] = useState<number[]>([])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -54,12 +56,12 @@ export const MessagesList: React.FC<{
             content: string
             user_id: string
           }) => (
-            <div className="my-8" key={id}>
-              <MessageAuthor user_id={user_id} />
-              <div className="prose ml-11">
-                <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
-              </div>
-            </div>
+            <MessagePanel
+              newMessages={newMessages}
+              id={id}
+              user_id={user_id}
+              content={content}
+            />
           )
         )}
       </div>

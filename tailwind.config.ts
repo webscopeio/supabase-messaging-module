@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      transitionDuration: {
+        3000: "3000ms",
+      },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
