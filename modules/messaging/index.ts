@@ -14,6 +14,19 @@ export async function getRooms(): Promise<Room[]> {
   return data
 }
 
+export async function getRoom({ id }: { id: number }): Promise<Room> {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from("rooms")
+    .select("*")
+    .eq("id", id)
+    .single()
+
+  if (error) throw new Error(error.message)
+
+  return data
+}
+
 export async function getAllUsers() {
   const supabase = createClient()
   const { data, error } = await supabase.from("profiles").select("*")
