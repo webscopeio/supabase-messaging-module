@@ -17,8 +17,9 @@ export const useMessages = ({
   const [messages, setMessages] = useState(messagesInitial)
 
   useEffect(() => {
+    const randomId = Math.random().toString(36).substring(7)
     const changes = client
-      .channel("db-messages-changes")
+      .channel(`db-messages-changes-${randomId}`)
       .on<Message>(
         "postgres_changes",
         {
@@ -74,8 +75,24 @@ export const useMessages = ({
     [messages, setMessages, roomId]
   )
 
+  const createMessage = useCallback(
+    (message: string) => {
+      client
+        .from("messages")
+        .insert({
+          content: message,
+          room_id: roomId,
+        })
+        .then(({ data }) => {
+          console.log(data)
+        })
+    },
+    [roomId]
+  )
+
   return {
     messages,
     fetchMore,
+    createMessage,
   }
 }
